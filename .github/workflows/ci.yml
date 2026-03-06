@@ -85,6 +85,8 @@ jobs:
 
       - name: Build frontend
         run: pnpm --filter @marketplace/frontend build
+        env:
+          NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: 'ci-placeholder'
 
       - name: Build backend
         run: pnpm --filter @marketplace/backend build
