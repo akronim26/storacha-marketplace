@@ -24,6 +24,7 @@ const router: ExpressRouter = Router()
 router.use((req: Request, res: Response, next: NextFunction) => {
   if (req.method === 'GET') {
     res.set('Cache-Control', 'no-store')
+    res.set('Pragma', 'no-cache')
     res.append('Vary', 'Authorization')
   }
   next()
@@ -89,12 +90,12 @@ router.get(
         listing: {
           sellerAddress: { equals: walletAddress, mode: 'insensitive' },
         },
-        ...(cursor ? { id: { gt: cursor } } : {}),
+        ...(cursor ? { id: { lt: cursor } } : {}),
       }
 
       const purchases = await prisma.purchase.findMany({
         where,
-        orderBy: { id: 'asc' },
+        orderBy: { createdAt: 'desc' },
         take: limit + 1,
         select: {
           id: true,
@@ -162,12 +163,12 @@ router.get(
 
       const where: Prisma.PurchaseWhereInput = {
         buyerAddress: { equals: walletAddress, mode: 'insensitive' },
-        ...(cursor ? { id: { gt: cursor } } : {}),
+        ...(cursor ? { id: { lt: cursor } } : {}),
       }
 
       const purchases = await prisma.purchase.findMany({
         where,
-        orderBy: { id: 'asc' },
+        orderBy: { createdAt: 'desc' },
         take: limit + 1,
         select: {
           id: true,

@@ -186,7 +186,7 @@ describe('purchases API', () => {
 
       const query = mockPurchaseFindMany.mock.calls[0]?.[0] as any
 
-      expect(query.where.id).toEqual({ gt: PURCHASE_ID })
+      expect(query.where.id).toEqual({ lt: PURCHASE_ID })
     })
 
     it('paginates results with nextCursor', async () => {
