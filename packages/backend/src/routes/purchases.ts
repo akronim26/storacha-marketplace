@@ -90,13 +90,13 @@ router.get(
         listing: {
           sellerAddress: { equals: walletAddress, mode: 'insensitive' },
         },
-        ...(cursor ? { id: { lt: cursor } } : {}),
       }
 
       const purchases = await prisma.purchase.findMany({
         where,
-        orderBy: { createdAt: 'desc' },
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
         take: limit + 1,
+        ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
         select: {
           id: true,
           buyerAddress: true,
@@ -118,7 +118,9 @@ router.get(
       const trimmedPurchases = hasNextPage
         ? purchases.slice(0, limit)
         : purchases
-      const nextCursor = hasNextPage ? (purchases[limit]?.id ?? null) : null
+      const nextCursor = hasNextPage
+        ? (trimmedPurchases[trimmedPurchases.length - 1]?.id ?? null)
+        : null
 
       const responsePurchases = trimmedPurchases.map((purchase) => ({
         id: purchase.id,
@@ -163,13 +165,13 @@ router.get(
 
       const where: Prisma.PurchaseWhereInput = {
         buyerAddress: { equals: walletAddress, mode: 'insensitive' },
-        ...(cursor ? { id: { lt: cursor } } : {}),
       }
 
       const purchases = await prisma.purchase.findMany({
         where,
-        orderBy: { createdAt: 'desc' },
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
         take: limit + 1,
+        ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
         select: {
           id: true,
           listing: {
@@ -197,7 +199,9 @@ router.get(
       const trimmedPurchases = hasNextPage
         ? purchases.slice(0, limit)
         : purchases
-      const nextCursor = hasNextPage ? (purchases[limit]?.id ?? null) : null
+      const nextCursor = hasNextPage
+        ? (trimmedPurchases[trimmedPurchases.length - 1]?.id ?? null)
+        : null
 
       const responsePurchases = trimmedPurchases.map((purchase) => ({
         id: purchase.id,

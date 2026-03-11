@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react'
 import { useAccount, useSignMessage } from 'wagmi'
 
 import { DownloadAccess } from '@/components/DownloadAccess'
+import { BLOCK_EXPLORER_URL } from '@/config'
 
 const API_URL = process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3001'
 
@@ -201,7 +202,7 @@ export default function PurchasesPage() {
                   {purchase.txHash && (
                     <div className="flex flex-col gap-0.5 sm:col-span-2 mt-1 pt-1 border-t border-border/30">
                       <a
-                        href={`https://sepolia.basescan.org/tx/${purchase.txHash}`}
+                        href={`${BLOCK_EXPLORER_URL}/tx/${purchase.txHash}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="truncate text-blue-500 hover:underline flex items-center gap-1"
